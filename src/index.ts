@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
 import http, { IncomingMessage, ServerResponse } from 'http';
 
-const PORT = 8000;
+dotenv.config();
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
 const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
   res.setHeader('Content-Type', 'text/html');
