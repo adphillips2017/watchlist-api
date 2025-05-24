@@ -1,15 +1,8 @@
 import { IncomingMessage, ServerResponse } from "http";
 import notFound from './controllers/notFound.controller.js';
+import Route from "./models/route.model.js";
+import { RouteHandler } from "./models/routeHandler.model.js";
 
-
-
-export type RouteHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void> | void;
-
-export interface Route {
-  path: string;
-  method: string;
-  handler: RouteHandler;
-}
 
 export class Router {
   private routes: Route[] = [];

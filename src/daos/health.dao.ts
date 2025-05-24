@@ -1,10 +1,6 @@
 import { Database } from 'sqlite';
 import { getDb } from '../db.js';
-
-export interface HealthStatus {
-  id: number;
-  healthy: number;
-}
+import HealthStatus from '../models/healthStatus.model.js';
 
 export class HealthDao {
   private db: Database;
