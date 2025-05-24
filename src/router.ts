@@ -1,17 +1,12 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { HealthController } from './controllers/health.controller.js';
 import notFound from './controllers/notFound.controller.js';
+import UserController from './controllers/user.controller.js';
+import Route from "./models/route.model.js";
+import { RouteHandler } from "./models/routeHandler.model.js";
 
 
-
-export type RouteHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void> | void;
-
-export interface Route {
-  path: string;
-  method: string;
-  handler: RouteHandler;
-}
-
-export class Router {
+class Router {
   private routes: Route[] = [];
 
   get(path: string, handler: RouteHandler): void {
@@ -23,15 +18,28 @@ export class Router {
   }
 
   put(path: string, handler: RouteHandler): void {
-    this.routes.push({ path, method: 'POST', handler });
+    this.routes.push({ path, method: 'PUT', handler });
   }
 
   patch(path: string, handler: RouteHandler): void {
-    this.routes.push({ path, method: 'POST', handler });
+    this.routes.push({ path, method: 'PATCH', handler });
   }
 
   delete(path: string, handler: RouteHandler): void {
-    this.routes.push({ path, method: 'POST', handler });
+    this.routes.push({ path, method: 'DELETE', handler });
+  }
+
+  /**
+   * Initializes and registers all application routes.
+   * This method instantiates controllers and registers their handlers
+   * with the router's internal route collection.
+   */
+  public initializeRoutes(): void { // <-- NEW METHOD
+    const healthController = new HealthController();
+    const userController = new UserController();
+
+    this.get('/health', healthController.getHealthStatus.bind(healthController));
+    this.post('/user', userController.registerUser.bind(userController));
   }
 
   /**
@@ -45,13 +53,13 @@ export class Router {
 
     if (!matchedRoute) {
       notFound(req, res);
+      return;
     }
 
     try {
       await matchedRoute?.handler(req, res);
     } catch (error) {
       console.error(`Error handling request for ${req.url} ${req.method}:`, error);
-      // Generic 500 error for unhandled exceptions in route handlers
       res.statusCode = 500;
       res.end(JSON.stringify({
         message: 'Internal Server Error',
@@ -60,3 +68,8 @@ export class Router {
     }
   }
 }
+
+
+const router = new Router();
+router.initializeRoutes();
+export default router;

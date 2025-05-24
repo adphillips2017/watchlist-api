@@ -1,4 +1,5 @@
-import { HealthDao, HealthStatus } from "../daos/health.dao.js";
+import { HealthDao } from "../daos/health.dao.js";
+import HealthStatus from "../models/healthStatus.model.js";
 
 export default class HealthService {
   private healthDao: HealthDao;

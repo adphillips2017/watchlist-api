@@ -3,6 +3,7 @@ import * as path from 'path';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import healthSchema from './schema/health.schema.js';
+import userSchema from './schema/user.schema.js';
 
 
 
@@ -32,7 +33,8 @@ export async function initializeDatabase() {
 
         // --- Execute all schema definition SQL ---
         const schemasToExecute = [
-            ...healthSchema
+            ...healthSchema,
+            ...userSchema
         ];
 
         for (const sqlStatement of schemasToExecute) {
