@@ -18,6 +18,22 @@ const ErrorDefinitions = {
     statusCode: 400
   } as ApiErrorObject,
 
+  // --- New Request Body Parsing Errors ---
+  NO_REQUEST_BODY: {
+    message: 'Request body is missing.',
+    statusCode: 400
+  } as ApiErrorObject,
+
+  INVALID_REQUEST_BODY: {
+    message: 'Request body contains invalid JSON.',
+    statusCode: 400
+  } as ApiErrorObject,
+
+  REQUEST_STREAM_ERROR: {
+    message: 'Server encountered an error reading the request stream.',
+    statusCode: 500
+  } as ApiErrorObject,
+
   // --- Generic Application Errors ---
   FAILED_TO_REGISTER_USER: {
     message: 'Failed to register user due to an unexpected server error.',
