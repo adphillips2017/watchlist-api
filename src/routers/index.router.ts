@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
-import healthStatus from '../controllers/health.controller';
-import notFound from '../controllers/notFound.controller';
+import healthStatus from '../controllers/health.controller.js';
+import notFound from '../controllers/notFound.controller.js';
 
 const router = (req: IncomingMessage, res: ServerResponse) => {
   switch(req.url) {

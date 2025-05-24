@@ -1,17 +1,25 @@
 import dotenv from 'dotenv';
 import http, { IncomingMessage, ServerResponse } from 'http';
-import logger from './middleware/logger.middleware';
-import router from './routers/index.router';
+import { initializeDatabase } from './db.js';
+import logger from './middleware/logger.middleware.js';
+import router from './routers/index.router.js';
 
 dotenv.config();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
-const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-  logger(req, res, () => {
-    router(req, res);
-  });
-});
+try {
+  await initializeDatabase();
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
+    logger(req, res, () => {
+        router(req, res);
+      });
+  });
+
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+} catch (error) {
+  console.error('Failed to start server: Database initialization error:', error);
+  process.exit(1);
+}

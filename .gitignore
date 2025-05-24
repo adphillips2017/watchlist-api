@@ -11,6 +11,9 @@
 /dist
 /tmp
 
+# data
+data/
+
 # Misc
 .env
 .DS_Store

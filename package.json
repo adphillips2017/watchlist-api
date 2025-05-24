@@ -1,11 +1,15 @@
 {
   "name": "watchlist-api",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
+    "build:watch": "tsc --watch --preserveWatchOutput",
+    "serve:dev": "nodemon --watch dist --exec \"node dist/index.js\"",
+    "predev": "npm run build",
+    "dev": "concurrently \"npm run build:watch\" \"npm run serve:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adam Phillips",
@@ -13,11 +17,17 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.15.21",
+    "concurrently": "^9.1.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "dotenv": "^16.5.0"
+    "@types/sqlite3": "^3.1.11",
+    "@types/uuid": "^10.0.0",
+    "dotenv": "^16.5.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^11.1.0"
   }
 }
