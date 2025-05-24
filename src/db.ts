@@ -49,7 +49,7 @@ export async function initializeDatabase() {
     }
 }
 
-export function getDb() {
+export function getDb(): Awaited<ReturnType<typeof open>> {
     if (!dbInstance) {
         throw new Error('Database not initialized. Call initializeDatabase() first.');
     }
