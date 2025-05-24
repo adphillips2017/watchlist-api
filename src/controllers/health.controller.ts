@@ -25,12 +25,9 @@ export class HealthController {
       errorMessage = (error instanceof Error) ? error.message : 'An unknown error occurred.';
     }
 
-    const statusCode = healthy ? 200 : 500;
-    const statusDescription = healthy ? 'Healthy' : 'Database Connection Error';
-
-    res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+    res.statusCode = healthy ? 200 : 500;
     res.end(JSON.stringify({
-      status: statusDescription,
+      status: healthy ? 'Healthy' : 'Database Connection Error',
       timestamp: new Date().toISOString(),
       error: errorMessage
     }));

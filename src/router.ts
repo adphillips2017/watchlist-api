@@ -52,7 +52,7 @@ export class Router {
     } catch (error) {
       console.error(`Error handling request for ${req.url} ${req.method}:`, error);
       // Generic 500 error for unhandled exceptions in route handlers
-      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.statusCode = 500;
       res.end(JSON.stringify({
         message: 'Internal Server Error',
         error: (error instanceof Error) ? error.message : 'Unknown server error'

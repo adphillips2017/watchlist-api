@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import http, { IncomingMessage, ServerResponse } from 'http';
 import { HealthController } from './controllers/health.controller.js';
 import { initializeDatabase } from './db.js';
+import { headerMiddleware } from './middleware/header.middleware.js';
 import logger from './middleware/logger.middleware.js';
 import { Router } from './router.js';
 
@@ -20,8 +21,10 @@ try {
   // Create the server, and register Middleware.
   const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
     logger(req, res, () => {
+      headerMiddleware(req, res, () => {
         router.route(req, res);
       });
+    });
   });
 
   // Run the server.
