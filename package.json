@@ -10,7 +10,10 @@
     "serve:dev": "nodemon --watch dist --exec \"node dist/index.js\"",
     "predev": "npm run build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve:dev\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:watch": "vitest watch",
+    "test:cov": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "author": "Adam Phillips",
   "license": "MIT",
@@ -18,10 +21,13 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.15.21",
+    "@vitest/coverage-v8": "^3.1.4",
+    "@vitest/ui": "^3.1.4",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
   },
   "dependencies": {
     "@types/sqlite3": "^3.1.11",

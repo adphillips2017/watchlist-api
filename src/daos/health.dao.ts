@@ -15,11 +15,6 @@ export class HealthDao {
    * @returns {Promise<HealthStatus | undefined>} A promise that resolves to the health status or undefined if not found.
    */
   async getHealthStatus(): Promise<HealthStatus | undefined> {
-    try {
-      return await this.db.get<HealthStatus>('SELECT id, healthy FROM health WHERE id = 1;');
-    } catch (error) {
-      console.error('Error fetching health status from DB in HealthDao:', error);
-      throw error;
-    }
+    return await this.db.get<HealthStatus>('SELECT id, healthy FROM health WHERE id = 1;');
   }
 }
