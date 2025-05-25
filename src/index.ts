@@ -4,13 +4,16 @@ import { initializeDatabase } from './db.js';
 import { bodyParser } from './middleware/bodyParser.middleware.js';
 import { headerMiddleware } from './middleware/header.middleware.js';
 import logger from './middleware/logger.middleware.js';
-import router from './router.js';
+import Router from './router.js';
 
 dotenv.config();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
 try {
   await initializeDatabase();
+
+  const router = new Router();
+  router.initializeRoutes();
 
   // Create the server, and register Middleware.
   const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
