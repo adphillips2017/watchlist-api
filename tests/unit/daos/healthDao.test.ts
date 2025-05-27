@@ -3,7 +3,7 @@ import { MockedFunction } from 'vitest';
 import { HealthDao } from '../../../src/daos/health.dao.js';
 
 const mockDbInstance = {
-  get: vi.fn(),
+  get: vi.fn()
 } as unknown as Database;
 
 const mockDbGet: MockedFunction<Database['get']> = mockDbInstance.get as MockedFunction<Database['get']>;

@@ -9,11 +9,11 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
-        'src/db.ts', // Database initialization might be fully mocked, so often excluded
-        'src/models/', // Models (interfaces/types) don't have executable code
-        'src/constants/', // Constants don't have executable code
-        'src/index.ts', // Main server entry file; often not tested directly for coverage
-        'src/controllers/notFound.controller.ts', // Simple 404 handler
+        'src/db.ts',
+        'src/models/',
+        'src/constants/',
+        'src/index.ts',
+        'src/controllers/notFound.controller.ts'
       ],
     },
     globals: true

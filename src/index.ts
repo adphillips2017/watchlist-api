@@ -15,7 +15,7 @@ try {
   const router = new Router();
   router.initializeRoutes();
 
-  // Create the server, and register Middleware.
+  // Create the server, register Middleware and Router.
   const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
     logger(req, res, () => {
       headerMiddleware(req, res, () => {
@@ -31,6 +31,6 @@ try {
     console.log(`Server running on port ${PORT}`);
   });
 } catch (error) {
-  console.error('Failed to start server: Database initialization error:', error);
+  console.error('Failed to start server:', error);
   process.exit(1);
 }
