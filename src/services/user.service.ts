@@ -1,7 +1,8 @@
-import { USERNAME_MIN_LENGTH } from "../constants/config.constants.js";
+import { PASSWORD_MIN_LENGTH, USERNAME_MIN_LENGTH } from "../constants/config.constants.js";
 import { ApiErrors } from "../constants/errors.constants.js";
 import UserDao from "../daos/user.dao.js";
 import { ApiError } from "../errors/api.error.js";
+import LoginResponse from "../models/loginResponse.model.js";
 import User from "../models/user.model.js";
 import { stringUtils } from "../utils/string.util.js";
 
@@ -46,6 +47,47 @@ export default class UserService {
       console.error(`[UserService - Unhandled Error] during user registration for ${username}:`, error);
       throw new ApiError(
         ApiErrors.FAILED_TO_REGISTER_USER,
+        error as Error
+      );
+    }
+  }
+
+  async loginUser(username: string, password: string): Promise<LoginResponse> {
+    // Basic Input Validation
+    if (
+      !username ||
+      !password ||
+      username.trim().length < USERNAME_MIN_LENGTH ||
+      password.trim().length < PASSWORD_MIN_LENGTH
+    ) {
+      throw new ApiError(ApiErrors.INVALID_CREDENTIALS);
+    }
+
+    try {
+      // Check if user exists and compare password with stored hash
+      const dbUser: User | undefined = await this.userDao.getUserByUsername(username);
+      if (!dbUser || !(await stringUtils.comparePasswords(password, dbUser.password_hash))) {
+        throw new ApiError(ApiErrors.INVALID_CREDENTIALS);
+      }
+
+      // Generate JWT
+      const token: string = stringUtils.generateJwt(dbUser);
+
+      // Omit password_hash before returning the user object
+      const { password_hash, ...userWithoutHash } = dbUser;
+
+      return {
+        user: userWithoutHash,
+        token: token
+      } as LoginResponse;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        console.error(`[UserService - Handled ApiError] Code: ${error.error.statusCode}, Message: ${error.error.message}.`);
+        throw error;
+      }
+      console.error(`[UserService - Unhandled Error] during user login for ${username}:`, error);
+      throw new ApiError(
+        ApiErrors.INVALID_CREDENTIALS,
         error as Error
       );
     }

@@ -1,7 +1,12 @@
 import bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import { PASSWORD_MIN_LENGTH, SALT_ROUNDS } from '../constants/config.constants.js';
+import { JWT_EXPIRATION_TIME, PASSWORD_MIN_LENGTH, SALT_ROUNDS } from '../constants/config.constants.js';
+import { ApiErrors } from '../constants/errors.constants.js';
+import { ApiError } from '../errors/api.error.js';
+import User from '../models/user.model.js';
 
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 class StringUtils {
@@ -74,6 +79,60 @@ class StringUtils {
     if (!hasSpecialChar) return false;
 
     return true;
+  }
+
+  /**
+   * Generates a JSON Web Token (JWT) for a given user.
+   * The token includes the user's ID and username in its payload and is signed
+   * with a secret key, expiring after a configured duration.
+   *
+   * @param {User} user - The user object for whom the JWT is to be generated.
+   * The user's `id` and `username` will be included in the token's payload.
+   * @returns {string} The generated JWT string.
+   * @throws {Error} If `JWT_SECRET` is not defined in the environment, indicating a critical configuration error.
+   */
+  public generateJwt(user: User): string {
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined. Cannot generate token.");
+    }
+
+    const payload = {
+      id: user.id,
+      username: user.username
+    };
+
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
+  }
+
+  /**
+   * Validates a given JSON Web Token (JWT).
+   * This method verifies the token's signature using the secret key and checks its expiration.
+   *
+   * @param {string} token - The JWT string to validate.
+   * @returns {jwt.JwtPayload} The decoded payload of the JWT if validation is successful.
+   * @throws {ApiError} If the token is missing, invalid, or expired.
+  */
+  public validateJwt(token: string): jwt.JwtPayload {
+    if (!token) {
+      throw new ApiError(ApiErrors.TOKEN_MISSING);
+    }
+
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined. Cannot validate token.");
+    }
+
+    try {
+      return jwt.verify(token, JWT_SECRET as string) as jwt.JwtPayload;
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        throw new ApiError(ApiErrors.TOKEN_EXPIRED, error);
+      } else if (error instanceof jwt.JsonWebTokenError) {
+        // This catches errors like "invalid signature", "invalid token", etc.
+        throw new ApiError(ApiErrors.TOKEN_INVALID, error);
+      } else {
+        throw new ApiError(ApiErrors.UNAUTHORIZED, error as Error);
+      }
+    }
   }
 }
 

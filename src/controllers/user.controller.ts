@@ -39,4 +39,34 @@ export default class UserController {
       }
     }
   }
+
+  /**
+   * Handles user login requests.
+   * Expects username and password in req.body, which is set by bodyParser.middlware
+   * @param req The IncomingMessage object.
+   * @param res The ServerResponse object.
+   */
+  async loginUser(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    try {
+      const { username, password } = req.body;
+      const { token, user } = await this.userService.loginUser(username, password);
+
+      res.statusCode = 200;
+      res.end(JSON.stringify({
+        message: 'Login successful.',
+        user,
+        token
+      }));
+
+    } catch (error) {
+      if (error instanceof ApiError) {
+        res.statusCode = error.error.statusCode;
+        res.end(JSON.stringify({ message: error.error.message }));
+      } else {
+        console.error('Unhandled error in loginUser controller:', error);
+        res.statusCode = 500;
+        res.end(JSON.stringify({ message: 'Unexpected error logging in.' }));
+      }
+    }
+  }
 }
