@@ -3,6 +3,7 @@ import http, { IncomingMessage, ServerResponse } from 'http';
 import { initializeDatabase } from './db.js';
 import { bodyParser } from './middleware/bodyParser.middleware.js';
 import { headerMiddleware } from './middleware/header.middleware.js';
+import { jwtParser } from './middleware/jwtParser.middleware.js';
 import logger from './middleware/logger.middleware.js';
 import Router from './router.js';
 
@@ -18,9 +19,11 @@ try {
   // Create the server, register Middleware and Router.
   const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
     logger(req, res, () => {
-      headerMiddleware(req, res, () => {
-        bodyParser(req, res, () => {
-          router.route(req, res);
+      jwtParser(req, res, () => {
+        headerMiddleware(req, res, () => {
+          bodyParser(req, res, () => {
+            router.route(req, res);
+          });
         });
       });
     });
