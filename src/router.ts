@@ -6,7 +6,7 @@ import Route from "./models/route.model.js";
 import { RouteHandler } from "./models/routeHandler.model.js";
 
 
-class Router {
+export default class Router {
   private routes: Route[] = [];
 
   get(path: string, handler: RouteHandler): void {
@@ -68,8 +68,3 @@ class Router {
     }
   }
 }
-
-
-const router = new Router();
-router.initializeRoutes();
-export default router;

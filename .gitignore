@@ -12,7 +12,7 @@
 /tmp
 
 # data
-data/
+/data
 
 # Misc
 .env

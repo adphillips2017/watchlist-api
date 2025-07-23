@@ -34,6 +34,27 @@ const ErrorDefinitions = {
     statusCode: 500
   } as ApiErrorObject,
 
+  // --- JWT Errors ---
+  TOKEN_MISSING: {
+    message: 'JWT token not found.',
+    statusCode: 401
+  } as ApiErrorObject,
+
+  TOKEN_EXPIRED: {
+    message: 'JWT token expired.',
+    statusCode: 401
+  } as ApiErrorObject,
+
+  TOKEN_INVALID: {
+    message: 'JWT token not valid.',
+    statusCode: 401
+  } as ApiErrorObject,
+
+  UNAUTHORIZED: {
+    message: 'JWT token not valid.',
+    statusCode: 401
+  } as ApiErrorObject,
+
   // --- Generic Application Errors ---
   FAILED_TO_REGISTER_USER: {
     message: 'Failed to register user due to an unexpected server error.',
