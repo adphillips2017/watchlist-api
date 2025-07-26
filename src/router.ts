@@ -38,8 +38,16 @@ export default class Router {
     const healthController = new HealthController();
     const userController = new UserController();
 
+    // Health Routes
     this.get('/health', healthController.getHealthStatus.bind(healthController));
-    this.post('/user', userController.registerUser.bind(userController));
+
+    // User Routes
+    this.post('/user/register', userController.registerUser.bind(userController));
+    this.post('/user/login', userController.loginUser.bind(userController));
+
+    // Watchlist Routes
+
+    // Watchlist-Item Routes
   }
 
   /**
@@ -47,8 +55,12 @@ export default class Router {
    * It finds a matching route and dispatches the request.
    */
   async route(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    // Parse the URL object to strip any query params
+    const parsedUrl = new URL(req.url || '/', `http://${req.headers.host}`);
+    const pathname = parsedUrl.pathname;
+
     const matchedRoute = this.routes.find(
-      route => route.path === req.url && route.method === req.method
+      route => route.path === pathname && route.method === req.method
     );
 
     if (!matchedRoute) {

@@ -1,12 +1,11 @@
 import bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { JWT_EXPIRATION_TIME, PASSWORD_MIN_LENGTH, SALT_ROUNDS } from '../constants/config.constants.js';
 import { ApiErrors } from '../constants/errors.constants.js';
 import { ApiError } from '../errors/api.error.js';
 import User from '../models/user.model.js';
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 
 class StringUtils {
@@ -92,6 +91,7 @@ class StringUtils {
    * @throws {Error} If `JWT_SECRET` is not defined in the environment, indicating a critical configuration error.
    */
   public generateJwt(user: User): string {
+    const JWT_SECRET = process.env.JWT_SECRET;
     if (!JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined. Cannot generate token.");
     }
@@ -117,6 +117,7 @@ class StringUtils {
       throw new ApiError(ApiErrors.TOKEN_MISSING);
     }
 
+    const JWT_SECRET = process.env.JWT_SECRET;
     if (!JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined. Cannot validate token.");
     }

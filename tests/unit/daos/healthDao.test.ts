@@ -2,6 +2,8 @@ import { Database } from 'sqlite';
 import { MockedFunction } from 'vitest';
 import { HealthDao } from '../../../src/daos/health.dao.js';
 
+
+
 const mockDbInstance = {
   get: vi.fn()
 } as unknown as Database;
@@ -12,13 +14,14 @@ vi.mock('../../../src/db.js', () => ({
   getDb: vi.fn(() => mockDbInstance),
 }));
 
-describe('HealthDao Unit Tests', () => {
+describe('HealthDao.getHealthStatus() Unit Tests', () => {
   let healthDao: HealthDao;
 
   beforeEach(() => {
     vi.clearAllMocks();
     healthDao = new HealthDao();
   });
+
 
   it('should return health status when found', async () => {
     const expectedHealthStatus = { id: 1, healthy: true };

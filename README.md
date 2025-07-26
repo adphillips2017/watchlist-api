@@ -61,9 +61,3 @@ A simple endpoint to check the API's operational status and its database connect
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-## 🔗 Related Projects
-
-* **Frontend Application:** [Watchlist App (Svelte)](https://github.com/adphillips2017/watchlist-app)
-    *Coming Soon*

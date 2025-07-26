@@ -20,11 +20,19 @@ declare module 'http' {
 const unprotectedRoutes: Omit<Route, 'handler'>[] = [
   {
     method: 'POST',
-    path: '/user'
+    path: '/user/register'
+  },
+  {
+    method: 'POST',
+    path: '/user/login'
   },
   {
     method: 'GET',
     path: '/health'
+  },
+  {
+    method: 'GET',
+    path: '/favicon.ico'
   }
 ]
 
@@ -42,10 +50,7 @@ const unprotectedRoutes: Omit<Route, 'handler'>[] = [
  * @param {() => void} next - The next middleware or route handler function in the chain.
  */
 export function jwtParser(req: IncomingMessage, res: ServerResponse, next: () => void): void {
-  const unprotectedRoute = unprotectedRoutes.find(
-    route => route.path === req.url && route.method === req.method
-  );
-  if (unprotectedRoute) {
+  if (routeIsUnprotected(req.url)) {
     next();
     return;
   }
@@ -75,5 +80,16 @@ export function jwtParser(req: IncomingMessage, res: ServerResponse, next: () =>
       res.statusCode = 500;
       res.end(JSON.stringify(error));
     }
+  }
+
+  function routeIsUnprotected(url: string | undefined): boolean {
+    // Parse the URL object to strip any query params
+    const parsedUrl = new URL(url || '/', `http://${req.headers.host}`);
+    const pathname = parsedUrl.pathname;
+    const unprotectedRoute = unprotectedRoutes.find(
+      route => route.path === pathname && route.method === req.method
+    );
+
+    return !!unprotectedRoute;
   }
 }

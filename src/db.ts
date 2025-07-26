@@ -40,8 +40,7 @@ export async function initializeDatabase() {
         for (const sqlStatement of schemasToExecute) {
             await dbInstance.exec(sqlStatement);
         }
-        console.log('All schemas ensured and initialized.');
-        // --- End schema execution ---
+        console.log('All schemas initialized.');
 
         console.log('Database initialized successfully.');
 
